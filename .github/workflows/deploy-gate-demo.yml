@@ -1,0 +1,16 @@
+name: Deploy Gate Demo
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+    steps:
+      - name: Simulate a production deployment
+        run: echo "Deploying to production... (this is a placeholder step)"
