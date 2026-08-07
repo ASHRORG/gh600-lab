@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "hooks": {
+    "preToolUse": [
+      {
+        "type": "command",
+        "bash": "INPUT=$(cat); if echo \"$INPUT\" | grep -Eiq '\"command\"\\s*:\\s*\"[^\"]*(terraform destroy|rm -rf|git push --force|git reset --hard)'; then echo '{\"permissionDecision\":\"deny\"}'; else echo '{\"permissionDecision\":\"allow\"}'; fi",
+        "powershell": "$in = [Console]::In.ReadToEnd(); if ($in -match '\"command\"\\s*:\\s*\"[^\"]*(terraform destroy|rm -rf|git push --force|git reset --hard)') { Write-Output '{\"permissionDecision\":\"deny\"}' } else { Write-Output '{\"permissionDecision\":\"allow\"}' }",
+        "timeoutSec": 10
+      }
+    ],
+    "postToolUse": [
+      {
+        "type": "command",
+        "bash": "INPUT=$(cat); TOOL=$(echo \"$INPUT\" | grep -o '\"toolName\"\\s*:\\s*\"[^\"]*\"' | head -1); echo \"$(date -u +%FT%TZ) $TOOL\" 1>&2; echo '{}'",
+        "powershell": "$in = [Console]::In.ReadToEnd(); Write-Error ((Get-Date).ToString('o') + ' ' + $in); Write-Output '{}'",
+        "timeoutSec": 10
+      }
+    ]
+  }
+}
