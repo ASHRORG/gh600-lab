@@ -1,0 +1,38 @@
+name: Plan Gate
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  require-plan:
+    # Defensive gating: only evaluate this in a real PR context, even though
+    # workflow_dispatch is enabled above for manual testing.
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate PR description contains a completed plan
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          echo "$PR_BODY" > pr_body.txt
+
+          if ! grep -q "## Plan" pr_body.txt; then
+            echo "::error::No '## Plan' section found. Fill in the PR template before requesting review."
+            exit 1
+          fi
+
+          # Naive but effective placeholder-detection: fail if the
+          # required fields still end exactly where the template left them.
+          if grep -qE "\*\*Goal:\*\*\s*$" pr_body.txt || \
+             grep -qE "Success criteria \(verifiable\):\*\*\s*$" pr_body.txt; then
+            echo "::error::Plan section looks incomplete — template placeholders were not filled in."
+            exit 1
+          fi
+
+          echo "Plan section present and appears complete."
