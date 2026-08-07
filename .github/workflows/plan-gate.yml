@@ -1,5 +1,13 @@
 name: Plan Gate
 
+# GH-600 Domain 1: "Define boundaries between planning, reasoning, and action"
+#
+# This workflow is wired in as a REQUIRED STATUS CHECK via the repository
+# ruleset (governance.tf). It fails the pull request unless the PR
+# description contains a completed "## Plan" section, turning "write a plan
+# first" from a convention into an enforced gate — i.e. the agent (or a human
+# simulating one) cannot get to "act" without a reviewable "plan" existing.
+
 on:
   pull_request:
     types: [opened, edited, synchronize, reopened]
@@ -27,10 +35,12 @@ jobs:
             exit 1
           fi
 
-          # Naive but effective placeholder-detection: fail if the
-          # required fields still end exactly where the template left them.
-          if grep -qE "\*\*Goal:\*\*\s*$" pr_body.txt || \
-             grep -qE "Success criteria \(verifiable\):\*\*\s*$" pr_body.txt; then
+          awk '/^## Plan/{in_plan=1; next} in_plan && /^## /{exit} in_plan' pr_body.txt > plan.txt
+
+          # Goal is inline, while success criteria are checklist items on
+          # following lines in the PR template.
+          if grep -qE "\*\*Goal:\*\*[[:space:]]*$" plan.txt || \
+             ! awk '/\*\*Success criteria \(verifiable\):\*\*/{in_criteria=1; next} in_criteria && /^- \*\*/{exit} in_criteria && /^[[:space:]]+- \[[ xX]\] .+/{found=1} END{exit !found}' plan.txt; then
             echo "::error::Plan section looks incomplete — template placeholders were not filled in."
             exit 1
           fi
