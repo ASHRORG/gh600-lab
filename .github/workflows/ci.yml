@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# Least-privilege token permissions, set explicitly per workflow (Domain 1:
+# "Set default workflow token permissions conservatively... grant higher
+# permissions only to the jobs that need them.")
+permissions:
+  contents: read
+
+jobs:
+  build-test-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run build/test/lint (placeholder)
+        run: |
+          echo "Running placeholder build/test/lint checks..."
+          find . -name "*.yml" -o -name "*.yaml" | sort
+          echo "ok" > result.txt
+
+      - name: Upload evidence artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-results
+          path: result.txt
