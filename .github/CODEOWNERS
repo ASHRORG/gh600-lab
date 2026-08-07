@@ -1,0 +1,9 @@
+# GH-600 Domain 1 lab — CODEOWNERS
+
+# Workflow and automation config — highest-risk path in this lab.
+/.github/workflows/  @ASHR4
+
+/infra/              @ASHR4
+
+# Fallback owner for everything else in the repository.
+*                     @ASHR4
