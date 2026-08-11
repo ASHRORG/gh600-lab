@@ -34,6 +34,6 @@ resource "azurerm_resource_group" "lab" {
   tags = {
     purpose     = "gh600-domain1-lab"
     managed_by  = "terraform"
-    environment = "lab"
+    environment = var.environment
   }
 }

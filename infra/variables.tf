@@ -9,3 +9,9 @@ variable "location" {
   description = "Azure region for the resource group."
   default     = "uksouth"
 }
+
+variable "environment" {
+  type        = string
+  description = "Environment tag for the Azure resource group."
+  default     = "lab"
+}
