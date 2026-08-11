@@ -1,0 +1,34 @@
+name: Agent Task (stateful checklist)
+description: A durable, resumable task record an agent can update as it progresses. GH-600 Domain 3 practice — "capture task progress and decisions as durable artifacts" and "resume agent work without repeating steps or diverging from prior decisions."
+title: "[Agent Task]: "
+labels: ["agent-task"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Assign this issue to Copilot coding agent (or work through it yourself simulating an agent). Keep the checklist and decisions log below updated as work progresses, so the task's state survives across sessions — anyone (including the agent, resumed later, or a different agent entirely) can pick up from the last checked item instead of starting over or re-deriving prior decisions.
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: What is this task trying to achieve? (mirrors the "Goal" field in the PR plan template — Domain 1)
+    validations:
+      required: true
+  - type: checkboxes
+    id: steps
+    attributes:
+      label: Steps (check off as completed — keep this updated across sessions/resumes)
+      options:
+        - label: "Step 1: "
+        - label: "Step 2: "
+        - label: "Step 3: "
+  - type: textarea
+    id: decisions
+    attributes:
+      label: Decisions & assumptions made so far (durable context for resuming without diverging)
+      description: Record anything a future session needs to know to avoid re-deciding or contradicting earlier choices.
+  - type: textarea
+    id: state-links
+    attributes:
+      label: Linked durable artifacts
+      description: Links to branches, PRs, workflow runs, or session logs that hold the actual work-in-progress state.
