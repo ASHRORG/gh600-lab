@@ -1,6 +1,5 @@
 name: Agent Task (stateful checklist)
-description: A durable, resumable task record an agent can update as it progresses. GH-600 Domain 3 practice — "capture task progress and decisions as durable artifacts" and "resume agent work without repeating steps or diverging from prior decisions."
-title: "[Agent Task]: "
+description: A durable, resumable task record an agent can update as it progresses. 
 labels: ["agent-task"]
 body:
   - type: markdown
